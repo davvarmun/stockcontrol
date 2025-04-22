@@ -20,7 +20,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<Product>> getAll() {
         List<Product> products = productService.getAllProducts();
-        return products.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(products);
+        return ResponseEntity.ok(products); 
     }
 
     @GetMapping("/{id}")

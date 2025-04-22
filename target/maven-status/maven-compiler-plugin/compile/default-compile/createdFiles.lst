@@ -1,7 +1,10 @@
 com\davvarmun\stockcontrol\stockcontrol\product\ProductController.class
 com\davvarmun\stockcontrol\stockcontrol\product\ProductService.class
+com\davvarmun\stockcontrol\stockcontrol\config\WebConfig$1.class
 com\davvarmun\stockcontrol\stockcontrol\exceptions\ResourceNotFoundException.class
 com\davvarmun\stockcontrol\stockcontrol\product\Product.class
+com\davvarmun\stockcontrol\stockcontrol\config\SecurityConfig.class
 com\davvarmun\stockcontrol\stockcontrol\StockControlApplication.class
 com\davvarmun\stockcontrol\stockcontrol\product\dto\ProductDTO.class
 com\davvarmun\stockcontrol\stockcontrol\product\ProductRepository.class
+com\davvarmun\stockcontrol\stockcontrol\config\WebConfig.class
