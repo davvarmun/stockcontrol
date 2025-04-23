@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { useFocusEffect, router } from "expo-router";
 
 const gs = require("../static/styles/globalStyles");
 
@@ -10,14 +11,8 @@ interface Product {
   price: number;
 }
 
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
 export default function ProductsScreen() {
   const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
   const fetchProducts = async () => {
     try {
@@ -31,12 +26,18 @@ export default function ProductsScreen() {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchProducts();
+    }, [])
+  );
+
   const handleCreate = () => {
-    Alert.alert("Crear producto"); // Aquí podrías navegar a un formulario
+    Alert.alert("Crear producto"); // puedes hacer navegación luego
   };
 
   const handleEdit = (product: Product) => {
-    Alert.alert("Editar producto", `ID: ${product.id}`);
+    router.push(`/editProduct?id=${product.id}`);
   };
 
   const handleDelete = (id: number) => {

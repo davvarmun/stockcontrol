@@ -14,6 +14,13 @@ export default function RootLayout() {
           animation: "slide_from_bottom",
         }}
       />
+      <Stack.Screen
+        name="editProduct"
+        options={{
+          title: "Editar producto",
+          animation: "slide_from_right",
+        }}
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
   );
