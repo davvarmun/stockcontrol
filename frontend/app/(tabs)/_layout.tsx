@@ -21,6 +21,16 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      {/* Pantalla oculta: Create Product */}
+      <Tabs.Screen
+        name="createProduct/createProduct"
+        options={{
+          href: null, // 👈 Oculta la pestaña
+          headerShown: false,
+        }}
+      />
     </Tabs>
+    
   );
 }
