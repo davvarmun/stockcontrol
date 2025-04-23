@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.davvarmun.stockcontrol.stockcontrol.product.dto.ProductDTO;
 
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
@@ -20,7 +21,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<Product>> getAll() {
         List<Product> products = productService.getAllProducts();
-        return products.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(products);
+        return ResponseEntity.ok(products); 
     }
 
     @GetMapping("/{id}")

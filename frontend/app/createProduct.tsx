@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { router } from "expo-router";
 
-const gs = require("../../../static/styles/globalStyles");
+const gs = require("../static/styles/globalStyles");
 
 export default function CreateProductScreen() {
   const [name, setName] = useState("");
@@ -11,24 +21,50 @@ export default function CreateProductScreen() {
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
-    if (!name.trim()) newErrors.name = "El nombre es obligatorio.";
-    if (!quantity || isNaN(Number(quantity))) newErrors.quantity = "Cantidad inválida.";
-    if (!price || isNaN(Number(price))) newErrors.price = "Precio inválido.";
+
+    if (!name.trim()) {
+      newErrors.name = "El nombre es obligatorio.";
+    } else if (name.trim().length < 2) {
+      newErrors.name = "El nombre debe tener al menos 2 caracteres.";
+    } else if (name.trim().length > 100) {
+      newErrors.name = "El nombre no puede superar los 100 caracteres.";
+    }
+
+    if (!quantity || isNaN(Number(quantity)) || Number(quantity) < 0)
+      newErrors.quantity = "Cantidad inválida.";
+    if (!price || isNaN(Number(price)) || Number(price) < 0)
+      newErrors.price = "Precio inválido.";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    // Aquí iría la lógica para hacer el POST al backend
-    Alert.alert("Producto creado", `Nombre: ${name}\nCantidad: ${quantity}\nPrecio: $${price}`);
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          quantity: Number(quantity),
+          price: Number(price),
+        }),
+      });
 
-    // Limpiar formulario después de crear
-    setName("");
-    setQuantity("");
-    setPrice("");
-    setErrors({});
+      if (!response.ok) {
+        throw new Error("Error al crear producto");
+      }
+
+      Alert.alert("Éxito", "Producto creado correctamente");
+      router.back();
+    } catch (error) {
+      console.error("Error al crear producto:", error);
+      Alert.alert("Error", "No se pudo crear el producto");
+    }
   };
 
   return (
@@ -42,7 +78,7 @@ export default function CreateProductScreen() {
         <Text style={gs.subHeaderText}>Nombre del producto</Text>
         <TextInput
           style={[gs.input, errors.name && { borderColor: "#D32F2F", borderWidth: 2 }]}
-          placeholder="Ej. Cerveza"
+          placeholder="Ej. Cerveza (mínimo: 2 caracteres, máximo: 100 caracteres)"
           value={name}
           onChangeText={setName}
         />
