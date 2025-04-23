@@ -1,85 +1,129 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-
+import React, { useState, useCallback } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
+import { useFocusEffect, router } from "expo-router";
 const gs = require("../static/styles/globalStyles");
 
+interface Product {
+  id: number;
+  name: string;
+  quantity: number;
+  price: number;
+}
+
 export default function ProductsScreen() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
-    interface Product {
-        id: number;
-        name: string;
-        stock: number;
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/products");
+      if (!response.ok) throw new Error("Error de red");
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error al cargar productos:", error);
     }
+  };
 
-    const [products, setProducts] = useState<Product[]>([]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProducts();
+    }, [])
+  );
 
-    // Simulación de datos, reemplaza con llamada a tu API
-    useEffect(() => {
-        setProducts([
-            { id: 1, name: "Cerveza", stock: 20 },
-            { id: 2, name: "Refresco", stock: 35 },
-            { id: 3, name: "Agua", stock: 50 },
-        ]);
-    }, []);
+  const handleCreate = () => {
+    router.push("/createProduct");
+  };
 
-    const handleCreate = () => {
-        // Navegación o acción de crear
-        Alert.alert("Crear producto");
-    };
+  const handleEdit = (product: Product) => {
+    router.push(`/editProduct?id=${product.id}`);
+  };
 
-    // Definir el tipo de 'product' como 'Product'
-    const handleEdit = (product: Product) => {
-        Alert.alert("Editar producto", `ID: ${product.id}`);
-    };
+  const showDeleteModal = (product: Product) => {
+    setProductToDelete(product);
+    setIsModalVisible(true);  
+  };
 
-    // Definir el tipo de 'id' como 'number'
-    const handleDelete = (id: number) => {
-        Alert.alert(
-            "Eliminar producto",
-            "¿Estás seguro de que deseas eliminar este producto?",
-            [
-                { text: "Cancelar", style: "cancel" },
-                {
-                    text: "Eliminar",
-                    style: "destructive",
-                    onPress: () => {
-                        setProducts((prev) => prev.filter((p) => p.id !== id));
-                    },
-                },
-            ]
-        );
-    };
+  const hideDeleteModal = () => {
+    setIsModalVisible(false);  
+    setProductToDelete(null);  
+  };
 
-    return (
-        <View style={[gs.container, { paddingTop: 60 }]}>
-            <TouchableOpacity style={gs.mainButton} onPress={handleCreate}>
-                <Text style={gs.mainButtonText}>Crear producto</Text>
-            </TouchableOpacity>
+  const handleDelete = async () => {
+    if (productToDelete) {
+      try {
+        const response = await fetch(`http://localhost:8080/api/v1/products/${productToDelete.id}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) throw new Error("Error al eliminar");
+        setProducts((prev) => prev.filter((p) => p.id !== productToDelete.id));
+        hideDeleteModal(); 
+      } catch (error) {
+        console.error("Error al eliminar:", error);
+      }
+    }
+  };
 
-            <ScrollView style={{ width: "100%", marginTop: 20 }}>
-                {products.map((product) => (
-                    <View key={product.id} style={gs.card}>
-                        <Text style={gs.cardTitle}>{product.name}</Text>
-                        <Text style={gs.cardContent}>Stock: {product.stock}</Text>
+  return (
+    <View style={[gs.container, { paddingTop: 60 }]}>
+      <TouchableOpacity style={gs.mainButton} onPress={handleCreate}>
+        <Text style={gs.mainButtonText}>Crear producto</Text>
+      </TouchableOpacity>
 
-                        <View style={[gs.row, { marginTop: 10 }]}>
-                            <TouchableOpacity
-                                style={[gs.secondaryButton, { flex: 1, marginRight: 5 }]}
-                                onPress={() => handleEdit(product)}
-                            >
-                                <Text style={gs.secondaryButtonText}>Editar</Text>
-                            </TouchableOpacity>
+      <ScrollView style={{ width: "100%", marginTop: 20 }}>
+        {products.map((product) => (
+          <View key={product.id} style={gs.card}>
+            <Text style={gs.cardTitle}>{product.name}</Text>
+            <Text style={gs.cardContent}>Cantidad: {product.quantity}</Text>
+            <Text style={gs.cardContent}>Precio: {product.price.toFixed(2)} €</Text>
 
-                            <TouchableOpacity
-                                style={[gs.mainButton, { flex: 1, marginLeft: 5 }]}
-                                onPress={() => handleDelete(product.id)}
-                            >
-                                <Text style={gs.mainButtonText}>Eliminar</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
+            <View style={[gs.row, { marginTop: 10 }]}>
+              <TouchableOpacity
+                style={[gs.secondaryButton, { flex: 1, marginRight: 5 }]}
+                onPress={() => handleEdit(product)}
+              >
+                <Text style={gs.secondaryButtonText}>Editar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[gs.mainButton, { flex: 1, marginLeft: 5 }]}
+                onPress={() => showDeleteModal(product)}
+              >
+                <Text style={gs.mainButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={isModalVisible}
+        onRequestClose={hideDeleteModal}
+      >
+        <View style={gs.centeredView}>
+          <View style={gs.modalView}>
+            <Text style={gs.modalTitle}>Eliminar producto</Text>
+            <Text style={gs.bodyText}>¿Estás seguro de que deseas eliminar este producto?</Text>
+            <View style={gs.row}>
+              <TouchableOpacity
+                style={[gs.secondaryButton, { flex: 1, marginRight: 5 }]}
+                onPress={hideDeleteModal}
+              >
+                <Text style={gs.secondaryButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[gs.mainButton, { flex: 1, marginLeft: 5 }]}
+                onPress={handleDelete}
+              >
+                <Text style={gs.mainButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-    );
+      </Modal>
+    </View>
+  );
 }
