@@ -14,7 +14,17 @@ export default function RootLayout() {
           animation: "slide_from_bottom",
         }}
       />
+
+      {/* Pantalla de crear producto */}
+      <Stack.Screen
+        name="createProduct/createProduct"
+        options={{
+          headerTitle: "Crear Producto", // Aquí puedes definir el título de la pantalla de creación
+          animation: "slide_from_right", // Opcional: Efecto de animación al navegar hacia la pantalla
+        }}
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
+    
   );
 }
