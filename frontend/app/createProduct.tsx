@@ -18,6 +18,7 @@ export default function CreateProductScreen() {
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState<{ name?: string; quantity?: string; price?: string }>({});
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
@@ -43,7 +44,7 @@ export default function CreateProductScreen() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/products", {
+      const response = await fetch(`${apiUrl}/api/v1/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

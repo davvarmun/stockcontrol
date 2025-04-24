@@ -15,10 +15,11 @@ export default function EditProductScreen() {
   const { id } = useLocalSearchParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [errors, setErrors] = useState<{ name?: string }>({});
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/api/v1/products/${id}`)
+      fetch(`${apiUrl}/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => setProduct(data))
         .catch((err) => {
@@ -47,7 +48,7 @@ export default function EditProductScreen() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/products/${product.id}`, {
+      const response = await fetch(`${apiUrl}/api/v1/products/${product.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
