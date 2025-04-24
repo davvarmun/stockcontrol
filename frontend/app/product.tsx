@@ -15,7 +15,8 @@ export default function ProductsScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
-  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+  const apiUrl = "https://stock-control-backend-o8gg8m5lw-davids-projects-9f8ec439.vercel.app";
+
 
   const fetchProducts = async () => {
     try {

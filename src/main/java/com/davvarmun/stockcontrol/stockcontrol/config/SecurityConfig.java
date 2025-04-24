@@ -25,23 +25,23 @@ public class SecurityConfig {
         return http.build();
     }
 
-@Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration config = new CorsConfiguration();
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
 
-   
-    config.setAllowedOrigins(List.of(
-        "http://localhost:8081",  
-        "https://stock-control-gzvki0h81-davids-projects-9f8ec439.vercel.app",
-        "https://stock-control-app-xi.vercel.app/"  
-    ));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    config.setAllowedHeaders(List.of("*"));
-    config.setAllowCredentials(true); 
+        config.setAllowedOrigins(List.of(
+            "http://localhost:8081", 
+            "https://stock-control-gzvki0h81-davids-projects-9f8ec439.vercel.app",
+            "https://stock-control-app-xi.vercel.app",  
+            "https://stock-control-backend-o8gg8m5lw-davids-projects-9f8ec439.vercel.app"
+        ));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", config); 
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
 
-    return source;
-}
+        return source;
+    }
 }
