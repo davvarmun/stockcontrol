@@ -18,3 +18,4 @@ target/
 # Maven wrapper
 .mvn/
 !mvn/wrapper/maven-wrapper.jar
+.vercel
