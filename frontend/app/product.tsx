@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { useFocusEffect, router } from "expo-router";
+import config from '../config';
 const gs = require("../static/styles/globalStyles");
 
 interface Product {
@@ -18,7 +19,8 @@ export default function ProductsScreen() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/products");
+      const apiUrl = await config.getApiUrl();
+      const response = await fetch(`${apiUrl}/products`);
       if (!response.ok) throw new Error("Error de red");
       const data = await response.json();
       setProducts(data);
@@ -56,7 +58,8 @@ export default function ProductsScreen() {
   const handleDelete = async () => {
     if (productToDelete) {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/products/${productToDelete.id}`, {
+        const apiUrl = await config.getApiUrl();
+        const response = await fetch(`${apiUrl}/products/${productToDelete.id}`, {
           method: "DELETE",
         });
         if (!response.ok) throw new Error("Error al eliminar");

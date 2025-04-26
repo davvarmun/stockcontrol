@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
+import config from '../config';
 
 const gs = require("../static/styles/globalStyles");
 
@@ -17,14 +18,26 @@ export default function EditProductScreen() {
   const [errors, setErrors] = useState<{ name?: string }>({});
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const apiUrl = await config.getApiUrl();
+        
+        const response = await fetch(`${apiUrl}/products/${id}`);
+        
+        if (!response.ok) {
+          throw new Error("Error al cargar el producto");
+        }
+        
+        const data = await response.json();
+        setProduct(data);
+      } catch (err) {
+        console.error("Error al cargar producto:", err);
+        Alert.alert("Error", "No se pudo cargar el producto");
+      }
+    };
+
     if (id) {
-      fetch(`http://localhost:8080/api/v1/products/${id}`)
-        .then((res) => res.json())
-        .then((data) => setProduct(data))
-        .catch((err) => {
-          console.error("Error al cargar producto:", err);
-          Alert.alert("Error", "No se pudo cargar el producto");
-        });
+      fetchProduct();
     }
   }, [id]);
 
@@ -47,7 +60,9 @@ export default function EditProductScreen() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/products/${product.id}`, {
+      const apiUrl = await config.getApiUrl();
+
+      const response = await fetch(`${apiUrl}/products/${product.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

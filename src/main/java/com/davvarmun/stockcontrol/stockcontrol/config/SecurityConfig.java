@@ -33,7 +33,8 @@ public class SecurityConfig {
             "http://localhost:8081", 
             "https://stockcontrol-production.up.railway.app",
             "https://stock-control-app-xi.vercel.app/",
-            "exp://192.168.1.39:8081"
+            "exp://192.168.1.39:8081",
+            "exp://192.168.x.x:8081"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));

@@ -10,6 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { router } from "expo-router";
+import config from '../config';
 
 const gs = require("../static/styles/globalStyles");
 
@@ -43,7 +44,8 @@ export default function CreateProductScreen() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/products", {
+      const apiUrl = await config.getApiUrl();
+      const response = await fetch(`${apiUrl}/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
