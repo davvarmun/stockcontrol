@@ -15,16 +15,19 @@ export default function ProductsScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
+
   const fetchProducts = async () => {
     try {
-      const response = await fetch("https://stockcontrol-production.up.railway.app/api/v1/products");
+      const response = await fetch("http://localhost:8080/api/v1/products");
       if (!response.ok) throw new Error("Error de red");
       const data = await response.json();
       setProducts(data);
     } catch (error) {
       console.error("Error al cargar productos:", error);
+      // Alert.alert("Error", "No se pudieron cargar los productos");
     }
   };
+  
 
   useFocusEffect(
     useCallback(() => {
@@ -53,7 +56,7 @@ export default function ProductsScreen() {
   const handleDelete = async () => {
     if (productToDelete) {
       try {
-        const response = await fetch(`https://stockcontrol-production.up.railway.app/api/v1/products/${productToDelete.id}`, {
+        const response = await fetch(`http://localhost:8080/api/v1/products/${productToDelete.id}`, {
           method: "DELETE",
         });
         if (!response.ok) throw new Error("Error al eliminar");

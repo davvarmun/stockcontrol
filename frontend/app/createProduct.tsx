@@ -43,7 +43,7 @@ export default function CreateProductScreen() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("https://stockcontrol-production.up.railway.app/api/v1/products", {
+      const response = await fetch("http://localhost:8080/api/v1/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

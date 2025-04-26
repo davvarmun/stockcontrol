@@ -18,7 +18,7 @@ export default function EditProductScreen() {
 
   useEffect(() => {
     if (id) {
-      fetch(`https://stockcontrol-production.up.railway.app/api/v1/products/${id}`)
+      fetch(`http://localhost:8080/api/v1/products/${id}`)
         .then((res) => res.json())
         .then((data) => setProduct(data))
         .catch((err) => {
@@ -47,7 +47,7 @@ export default function EditProductScreen() {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch(`https://stockcontrol-production.up.railway.app/api/v1/products/${product.id}`, {
+      const response = await fetch(`http://localhost:8080/api/v1/products/${product.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
