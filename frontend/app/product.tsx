@@ -17,7 +17,7 @@ export default function ProductsScreen() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/products");
+      const response = await fetch("https://stockcontrol-production.up.railway.app/api/v1/products");
       if (!response.ok) throw new Error("Error de red");
       const data = await response.json();
       setProducts(data);
@@ -53,7 +53,7 @@ export default function ProductsScreen() {
   const handleDelete = async () => {
     if (productToDelete) {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/products/${productToDelete.id}`, {
+        const response = await fetch(`https://stockcontrol-production.up.railway.app/api/v1/products/${productToDelete.id}`, {
           method: "DELETE",
         });
         if (!response.ok) throw new Error("Error al eliminar");

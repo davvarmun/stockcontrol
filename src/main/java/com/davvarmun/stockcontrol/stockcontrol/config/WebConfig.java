@@ -14,7 +14,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:8081") // o "*" si solo estás en desarrollo
+                        .allowedOrigins("http://localhost:8081", "https://stockcontrol-production.up.railway.app", "https://stock-control-app-xi.vercel.app") 
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*");
             }

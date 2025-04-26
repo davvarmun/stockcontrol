@@ -29,13 +29,17 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:8081")); // Asegúrate de poner exactamente el puerto del frontend
+        config.setAllowedOrigins(List.of(
+            "http://localhost:8081", 
+            "https://stockcontrol-production.up.railway.app",
+            "https://stock-control-app-xi.vercel.app/"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true); // Solo si usas cookies o auth
+        config.setAllowCredentials(true); 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config); // Aplica a todas las rutas
+        source.registerCorsConfiguration("/**", config);
 
         return source;
     }
